@@ -1,10 +1,10 @@
-const { description } = require('../../package')
+const {description} = require('../../package')
 
 module.exports = {
   /**
    * Ref：https://v1.vuepress.vuejs.org/config/#title
    */
-  title: 'Vuepress Docs Boilerplate',
+  title: 'CXBridge',
   /**
    * Ref：https://v1.vuepress.vuejs.org/config/#description
    */
@@ -16,9 +16,9 @@ module.exports = {
    * ref：https://v1.vuepress.vuejs.org/config/#head
    */
   head: [
-    ['meta', { name: 'theme-color', content: '#3eaf7c' }],
-    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
-    ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }]
+    ['meta', {name: 'theme-color', content: '#3eaf7c'}],
+    ['meta', {name: 'apple-mobile-web-app-capable', content: 'yes'}],
+    ['meta', {name: 'apple-mobile-web-app-status-bar-style', content: 'black'}]
   ],
 
   /**
@@ -34,37 +34,32 @@ module.exports = {
     lastUpdated: false,
     nav: [
       {
-        text: 'Guide',
-        link: '/guide/',
-      },
-      {
-        text: 'Config',
-        link: '/config/'
+        text: 'Docs',
+        link: '/docs/',
       },
       {
         text: 'VuePress',
         link: 'https://v1.vuepress.vuejs.org'
       }
     ],
-    sidebar: {
-      '/guide/': [
-        {
-          title: 'Guide',
-          collapsable: false,
-          children: [
-            '',
-            'using-vue',
-          ]
-        }
-      ],
-    }
-  },
 
-  /**
-   * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
-   */
-  plugins: [
-    '@vuepress/plugin-back-to-top',
-    '@vuepress/plugin-medium-zoom',
-  ]
+    sidebar: {
+      'docs': [
+        '',
+        'vault'
+      ],
+      '/': [
+        '',
+        '文档'
+      ]
+    },
+
+    /**
+     * Apply plugins，ref：https://v1.vuepress.vuejs.org/zh/plugin/
+     */
+    plugins: [
+      '@vuepress/plugin-back-to-top',
+      '@vuepress/plugin-medium-zoom',
+    ]
+  }
 }
