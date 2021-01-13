@@ -26,7 +26,7 @@
              用户输确认充值并进行签名
                        |
                        V
-    用户向信托热地址充值BTC附带OP_RETURN(ChainX账户信息)
+    用户向资产保险库热地址充值BTC附带OP_RETURN(ChainX账户信息)
                        |
                        V
       从已确认的BTC区块中获取与ChainX用户相关的交易
@@ -42,12 +42,12 @@
               
   充值接口：
   ```rust
-     fn apply_issue(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
-       let sender = ensure_signed!(origin)?
-       ensure_unique([sender, btc_address])?;
-       ext::collateral::lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
-       insert_vault_to_storage(Vault::new(...))
-       deposit_event(...)
+     fn apply_issue(origin, to_user, xbtc_count) -> _ {
+       let sender = ensure_signed!(origin);
+       let valt = assign_valt(sender,to_user,xbtc_count);
+       sign_to_transaction(sender);
+       validate_BTC(sender,xbtc_count);
+       addxbtc_to_user(xbtc_count);
      }
    ```
 
@@ -59,10 +59,10 @@
             ChainX锁定该用户的X-BTC
                       |
                       V
-             信托获取到该提现请求
+             资产保险库获取到该提现请求
                       |
                       V
-               其他信托给该请求签名
+              其他资产保险库给该请求签名
                       |
                       V
         ChainX中继链提交该提现请求至比特币网络中
@@ -75,12 +75,13 @@
     
    提现接口：
    ```rust
-     fn apply_redeem(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
+     fn apply_redeem(origin, xbtc_count, to_btc_address) -> _ {
        let sender = ensure_signed!(origin)?
-       ensure_unique([sender, btc_address])?;
-       ext::collateral::lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
-       insert_vault_to_storage(Vault::new(...))
-       deposit_event(...)
+       let find_valt = valt_find_transaction(sender,xbtc_count,to_btc_address);
+       valt_lock_xbtc(xbtc_count);
+       other_valt_sign();
+       tell_btc_unlock(btc_count,to_btc_address);
+       destroy(xbtc_count);
      }
    ```
              
