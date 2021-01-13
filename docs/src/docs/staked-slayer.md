@@ -74,14 +74,20 @@ fn deregister(origin) -> _ {
 
 ```rust
 fn activated(origin) {
-
+  let signer = ...;
+  ensure_inactive(signer)?;
+  remove_from_inactive(signer);
+  insert_to_active(signer);
 }
 ```
 
 ### 冻结
 ```rust
 fn deactivated(origin) -> _ {
-
+  let signer = ...;
+  ensure_active(signer)?;
+  remove_from_active(signer);
+  insert_to_active(signer);
 }
 ```
 
