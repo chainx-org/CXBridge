@@ -42,7 +42,7 @@
               
   充值接口：
   ```rust
-     fn issue(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
+     fn apply_issue(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
        let sender = ensure_signed!(origin)?
        ensure_unique([sender, btc_address])?;
        ext::collateral::lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
@@ -75,7 +75,7 @@
     
    提现接口：
    ```rust
-     fn redeem(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
+     fn apply_redeem(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
        let sender = ensure_signed!(origin)?
        ensure_unique([sender, btc_address])?;
        ext::collateral::lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
