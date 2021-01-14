@@ -52,4 +52,6 @@ System(Issue)->> Vault: Decrease to-be-issued token && increase issued token && 
 
 ### [fee](fee)
 手续费管理，惩罚费用管理。
-[充值与赎回](IssueAndRedeem)
+
+### [充值与赎回](IssueAndRedeem)
+用户用BTC进行充值和赎回BTC
