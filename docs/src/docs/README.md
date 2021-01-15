@@ -41,10 +41,10 @@ System(Issue)->> Vault: Decrease to-be-issued token && increase issued token && 
 ### [充值与赎回](IssueAndRedeem)
 用户用BTC进行充值和赎回BTC
 
-- [ ] ##### [汇率](exchange-rate)
+##### [汇率](exchange-rate)
 - [ ] 定期上报PCX-BTC的汇率变动。
 
-- [ ] ##### [fee](fee)
+##### [fee](fee)
 - [ ] 手续费管理，惩罚费用管理。
 
 
