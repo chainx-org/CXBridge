@@ -38,14 +38,14 @@ System(Issue)->> Vault: Decrease to-be-issued token && increase issued token && 
 ### [资产保险库](vault)
 资产保险库的注册，增加抵押物，合并。
 
-### [汇率](exchange-rate)
-定期上报PCX-BTC的汇率变动。
-
-### [金库](collateral)
-保管抵押的PCX，处理作恶惩罚。
-
-### [fee](fee)
-手续费管理，惩罚费用管理。
-
 ### [充值与赎回](IssueAndRedeem)
 用户用BTC进行充值和赎回BTC
+
+  ##### [汇率](exchange-rate)
+  定期上报PCX-BTC的汇率变动。
+
+  ##### [fee](fee)
+  手续费管理，惩罚费用管理。
+
+
+
