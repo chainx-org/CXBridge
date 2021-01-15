@@ -6,6 +6,8 @@ sidebar: auto
 
 # 资产保险库
 
+资产保险库用于保管用户充值进来的BTC。每个资产保险库在注册的时候需要质押一笔PCX， 质押的PCX的多寡决定了该资产保险库最多可发行的代币。
+
 ## 存储
 
 - VaultMinimumCollateral  
@@ -21,11 +23,14 @@ sidebar: auto
 - LiquidationVaultAccountId  
   在genesis中声明的账户，当资产保险库被清算时，他的X-BTC和抵押的PCX将被转移到此账户。  
   ::: details Question
-  如何使用？ 如果多名Vault被清算会发生什么？
+  多名Vault被清算会使所有被清算的资产保险库的数据合并到此账户下。包括已发行的代币，抵押物，待发行代币和待体现代币。
   :::
 - LiquidationVault  
+  同上    
 - Vaults  
+  资产保险库的列表。
 - VaultBtcAdresses  
+  资产保险库的BTC地址， 地址需要唯一， 但是可以对应到同一个资产保险库。
 - Version  
   版本号
 
@@ -67,3 +72,19 @@ fn lock_additional_collateral(origin, amount: PCX) -> _ {
 ```
 
 在抵押率低的时候， 允许资产保险库增加抵押品。
+
+### 抵押品提现
+```rust
+fn withdraw_collateral(orgin, amount: PCX) -> _ {
+    ...
+}
+```
+从金库中解锁抵押品，需满足提现之后的余额仍然高于最小抵押额度和安全阈值。安全阈值通过其已发行的代币和汇率换算得来。
+
+### 更新比特币地址
+```rust
+fn update_btc_address(origin, address) -> _ {
+    ...
+  }
+```
+新增比特币地址, 插入到存储中，一个资产保险库可以有多个比特币地址，在地址之间的转账是允许的。

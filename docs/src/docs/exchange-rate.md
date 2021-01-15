@@ -34,6 +34,14 @@ map(AccountId) => Vec<u8>
 ```rust
 fn set_exchange_rate(origin, btc_dot: u128) -> _ {
   let signer = ensure_authorized(origin)?;
+  ...
+}
+```
 
+### 设置BTC每字节的交易费
+```rust
+fn set_btc_tx_fees_per_bytes(origin, fast, half, hour) -> _ {
+  ensure_not_shutdown()?;
+  ...
 }
 ```

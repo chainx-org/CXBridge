@@ -36,19 +36,13 @@ System(Issue)->> Vault: Decrease to-be-issued token && increase issued token && 
 ## 模块
 
 ### [资产保险库](vault)
-资产保险库的注册， 增加抵押物， 合并。
+资产保险库的注册，增加抵押物，合并。
 
 ### [汇率](exchange-rate)
 定期上报PCX-BTC的汇率变动。
 
 ### [金库](collateral)
 保管抵押的PCX，处理作恶惩罚。
-
-### [服务奖池](fee-poll)
-储存服务费， 可定期根据资产保险库的服务等级提现。
-
-### [铸币中心](treasury)
-发行和销毁代币
 
 ### [fee](fee)
 手续费管理，惩罚费用管理。
