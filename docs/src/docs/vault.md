@@ -61,20 +61,31 @@ $$分红率 * 每XBTC收益 * 发行代币量 + 奖池剩余金额 * (抵押品/
 ## 交易
 
 ### 注册
+
+注册成为资产保险库， 申请人必须是一个节点， 同时保证账户下需要有不少于抵押物的pcx。否则会注册失败。
+抵押物最少不低于1000pcx。逻辑流程如下：
 ```rust
 fn register_vault(origin, collateral: PCX, btc_address: BtcAddress) -> _ {
   let sender = ensure_signed!(origin)?
   ensure_unique([sender, btc_address])?;
-  ext::collateral::lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
-  insert_vault_to_storage(Vault::new(...))
-  deposit_event(...)
+  lock(sender, collateral)?; // Error: if collateral < minimum_collateral or collateral is not sufficiant.
+  insert_vault_to_storage(Vault::new(...));
+  insert_btcaddress(...);
+  increase_total_collateral(...);
+  deposit_event(...);
 }
 ```
+异常情况:
+- `InsufficientFunds`: 申请人资产不足以支付抵押物
+- `InsufficientVaultCollateralAmount`: 抵押物小于最低阈值
+- `VaultRegisterd`: 保险库已被注册
+- `BtcAddressOccupied`: 比特币地址被占用
+
 提供初始抵押和btc地址，保证申请人和比特币地址唯一。注册成功后，btc地址不可更改。
 ```rust
 Vault {
   id,
-  wallet: Wallet::(BtcAddress),
+  wallet: BtcAddress,
   to_be_issued_tokens,
   issued_tokens,
   to_be_redeem_tokens,
@@ -86,21 +97,42 @@ Vault {
   }
 }
 ```
+
+`Vault`的结构如上， `wallet`与保险库绑定， `to_be_issued_tokens`是其他用户申请充值，但尚未执行的请求。
+`to_be_redeem_tokens`同理。`issued_tokens`是通过该资产保险库充值的所有代币总和。`banned_until`不为`None`时，在指定的
+块高之前，该资产保险库无法处理新的充值或者提现请求。正常的保险库状态是`Active`, 当有用户举报保险有不当行为的时候，
+保险库进入`CommitedTheft`的状态，等待轻节点验证。当保险库处于`Liquidated`状态时，保险库被永久禁用。
+
 ### 增加抵押品
+保险库所能发行的最大代币数为
+$$（抵押品 * 汇率）/ 安全阈值$$
+其抵押率为
+$$（抵押品 * 汇率）/ 已发行代币$$
+保险库的收益正比于其抵押率，当汇率波动使保险库的抵押率下降的时候，保险库需要增加抵押物，以提高其抵押率。
+其逻辑流程如下：
 ```rust
 fn lock_additional_collateral(origin, amount: PCX) -> _ {
   let sender = ...;
   ensure_vault_exist!(sender);
-  ext::collateral::lock(sender, amount)?;
+  lock(sender, amount)?;
 }
 ```
 
-在抵押率低的时候， 允许资产保险库增加抵押品。
+异常情况:
+- `InsufficientFunds`: 申请人资产不足以支付抵押物
 
 ### 抵押品提现
+抵押率高于安全阈值时，保险库收益最大。此时保险库可以将溢出抵押品提现。
+从金库中解锁抵押品，需满足提现之后的余额仍然高于最小抵押额度, 同时抵押率高于安全阈值。
+
 ```rust
 fn withdraw_collateral(orgin, amount: PCX) -> _ {
     ...
 }
 ```
-从金库中解锁抵押品，需满足提现之后的余额仍然高于最小抵押额度和安全阈值。安全阈值通过其已发行的代币和汇率换算得来。
+
+异常情况：
+- `InsufficientCollateral`: 抵押品小于总额度
+- `LessThanMinimiumBound`: 提现后额度小于最小阈值
+- `LessThanSecureThreshold`: 提现后抵押率小于安全阈值
+- `InvaildStatus`: 提现时保险库处于非正常状态
