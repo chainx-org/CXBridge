@@ -1,4 +1,3 @@
-
 ## 概述：
 
 现实中运行的公链与ChinX资产交互流通的四种方式
@@ -14,9 +13,7 @@
 
 --------------------
 
-## 整体流程和伪代码：
-
-#### 1.发行XBTC（即充值）
+## 1.发行XBTC（即充值）
 
          用户输入必要信息（目标账户、发行的数量）
                        |
@@ -41,16 +38,21 @@
                        V
               用户观看到自己的X-BTC增多
               
-  充值接口：
-  ```rust
-     fn apply_issue(origin, to_user, xbtc_count) -> _ {
-       let sender = ensure_signed!(origin);
-       let valt = assign_valt(sender,to_user,xbtc_count);
-       sign_to_transaction(sender);
-       validate_BTC(sender,xbtc_count);
-       addxbtc_to_user(xbtc_count);
-     }
-   ```
+###  申请充值：
+```rust
+  fn request_issue(origin, vault_id, btc_amount, griefing_collateral) {
+    ensure_signed(...);
+    ensure_not_banned(vault_id);
+    ensure_enough(griefing_collateral);
+    lock_collateral(...);
+    insert_request_to_storage(...);
+    Ok(())
+  }
+```
+* 申请充值需要抵押PCX以防止恶意充值, 如果没有及时充值，这笔PCX将奖励给对应的vault。
+* 充值的时候，保险库可能会被ban，因为在匹配保险库和用户发起交易之间有时间间隔。
+* 申请不会被及时处理，需要等待用户转账，以及等待relay将此交易的信息提到链上。
+
 
 #### 2.赎回BTC（即提现）
 
