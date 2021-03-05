@@ -56,7 +56,7 @@ module.exports = {
     ]
   },
   plugins: [
-    "mermaidjs",
+    ["mermaidjs", {sequence: {height: 40}}],
     "mathjax"
   ]
 }
