@@ -222,4 +222,4 @@ fn withdraw_collateral(orgin, amount: PCX) -> _ {
 ## 术语解释
 
 ### 清算
-TODO(wangyafei)
+TODO(wangyafei.)
