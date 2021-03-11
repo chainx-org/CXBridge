@@ -272,6 +272,64 @@ RequestIssue(request_id)
 - 6.记录此次充值请求
 - 7.发出充值请求事件
 
+##### 用户接口：
+```rust
+execute_issue(requester, requestid, txid, merkleproof, rawtx)
+```
+
+##### 参数信息：
+- requester：执行者信息
+- requestid：对应充值信息ID
+- txid：比特币交易ID
+- merkleproof：比特币交易默克尔证明
+- rawtx：比特币交易原文
+
+##### 事件：
+```rust
+IssueRequestExecuted(requestid)
+```
+
+##### 错误信息：
+- IssueRequestExpired
+充值请求已经过期，这意味着不可以再执行该充值请求
+
+##### 详细逻辑：
+- 1.确保申请者是签名用户
+- 2.确认该功能模块是运行正常状态
+- 3.根据requestid获取到充值请求的详细信息
+- 4.确保该请求没有过期
+- 5.校验比特币交易信息
+- 6.给该用户发行XBTC
+- 7.解锁该用户充值时候抵押的PCX
+- 8.删除该充值请求
+- 9.发送充值成功事件
+
+##### 用户接口：
+```rust
+cancel_issue(requester, requestid)
+```
+
+##### 参数信息：
+- requester：执行者信息
+- requestid：对应充值信息ID
+
+##### 事件：
+```rust
+IssueRequestCancelled(requestid)
+```
+
+##### 错误信息：
+- IssueRequestNotExpired
+充值请求没有过期，这意味着不可以取消该充值请求
+
+##### 详细逻辑：
+- 1.确保申请者是签名用户
+- 2.根据requestid获取到充值请求的详细信息
+- 3.确保该请求已经过期
+- 4.将充值时候抵押的PCX转给资产保险库
+- 5.删除该充值请求
+- 6.发送取消充值事件
+
 ### 赎回
 
 
