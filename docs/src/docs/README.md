@@ -252,9 +252,7 @@ request_issue(requester, vault, amount, griefingCollateral)
 - griefingCollateral:防止恶意充值抵押
 
 ##### 事件：
-```rust
-RequestIssue(request_id)
-```
+- RequestIssue(request_id)
 
 ##### 错误信息：
 - InsecureVault
@@ -284,9 +282,7 @@ execute_issue(requester, requestid, txid, merkleproof, rawtx)
 - rawtx：比特币交易原文
 
 ##### 事件：
-```rust
-IssueRequestExecuted(requestid)
-```
+- IssueRequestExecuted(requestid)
 
 ##### 错误信息：
 - IssueRequestExpired
@@ -313,9 +309,7 @@ cancel_issue(requester, requestid)
 - requestid：对应充值信息ID
 
 ##### 事件：
-```rust
-IssueRequestCancelled(requestid)
-```
+- IssueRequestCancelled(requestid)
 
 ##### 错误信息：
 - IssueRequestNotExpired
