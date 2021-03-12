@@ -434,13 +434,21 @@ cancel_redeem(requester, requestid，reimburse)
 - 5.对vault惩罚计算
 - 6.如果 报销式赎回
 	  {
+	  
 	  	a.减少vault的to_be_redeemed_tokens标识和issued_tokens
+		
 	  	b.销毁用户XBTC
+		
 	  	c.将vault抵押的pcx给用户（根据btc-pcx换算比例）
+		
 	  }
+	  
 	  否则
+	  
 	  {
+	  
 	  	a.将惩罚vault的钱给用户
+		
 	  }
 - 7.禁用vault一段时间
 - 8.将赎回请求标记为删除
