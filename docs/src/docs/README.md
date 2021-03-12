@@ -328,11 +328,11 @@ cancel_issue(requester, requestid)
 提现模块允许用户在比特币链上接收BTC，以销毁chainx链上的等量XBTC。该过程由用户请求使用资金保险库提现而启动。然后，保管库需要在给定的时限内将BTC发送给用户。接下来，保险库必须通过向chainx提供证明他已经向用户发送了正确数量的BTC的方式来完成该过程。如果资金保险库未能在期限内提供有效证明，则用户可以从资金保险库的锁定抵押品中索取同等数量的PCX，以补偿他在BTC中的损失，也可以取消此次提现更换一个资产保险库再次执行提现。
 
 #### 整体流程
-1.前提条件：用户拥有XBTC
-2.用户执行request_redeem接口来锁定一定量的XBTC。在这个过程中，用户从资产保险库列表里面选择一个资产保险库来执行此次提现任务
-3.被选定的资产保险库监听由用户触发的NewRedeemRequest到事件，然后资产保险库在比特币链上对请求用户进行转账
-4.资产保险库或者其他人调用execute_redeem接口并提供比特币交易证明，如果上面接口执行成功，用户锁定的XBTC会被销毁，同时用户获得了他想要的比特币
-5.如果用户没有在规定时间内获得提现的比特币，用户可以调用cancel_redeem接口用以获取对应的PCX补偿或者取消此次提现换一个资产保险库重新提现
+- 1.前提条件：用户拥有XBTC
+- 2.用户执行request_redeem接口来锁定一定量的XBTC。在这个过程中，用户从资产保险库列表里面选择一个资产保险库来执行此次提现任务
+- 3.被选定的资产保险库监听由用户触发的NewRedeemRequest到事件，然后资产保险库在比特币链上对请求用户进行转账
+- 4.资产保险库或者其他人调用execute_redeem接口并提供比特币交易证明，如果上面接口执行成功，用户锁定的XBTC会被销毁，同时用户获得了他想要的比特币
+- 5.如果用户没有在规定时间内获得提现的比特币，用户可以调用cancel_redeem接口用以获取对应的PCX补偿或者取消此次提现换一个资产保险库重新提现
 
 #### 细节说明
 单次提现请求在链上储存的状态和信息
@@ -352,33 +352,33 @@ request_redeem(requester, vault, amount, btcaddr)
 ```
 
 ##### 参数信息：
-requester：提现者信息
-vault：选定的资产保险库
-amount：提现XBTC数量
-btcaddr： 提现者自己的比特币地址
+- requester：提现者信息
+- vault：选定的资产保险库
+- amount：提现XBTC数量
+- btcaddr： 提现者自己的比特币地址
 
 ##### 事件：
 NewRedeemRequest(requestid)
 
 ##### 错误信息：
-InsufficiantAssetsFunds
+- InsufficiantAssetsFunds
 提现XBTC数量大于自己拥有的数量
-RedeemAmountTooLarge
+- RedeemAmountTooLarge
 提现XBTC数量大于指定资产保险库可以提现的数量
-AmountBelowDustAmount
+- AmountBelowDustAmount
 提现数量过小
 
 ##### 详细逻辑：
-	1.确保是签名用户
-	2.确认链是运行正常状态
-	3.确保赎回金额小于自己拥有的XBTC数量
-	4.确保赎回金额小于指定vault可以提现的数量
-	5.确保赎回金额足够大（防止粉尘攻击）
-	6.赎回费用计算
-	7.锁定用户XBTC
-	8.增加vault的to_be_redeemed_tokens标识
-	9.赎回请求进行记录
-	10.发出提现请求事件
+- 1.确保是签名用户
+- 2.确认链是运行正常状态
+- 3.确保赎回金额小于自己拥有的XBTC数量
+- 4.确保赎回金额小于指定vault可以提现的数量
+- 5.确保赎回金额足够大（防止粉尘攻击）
+- 6.赎回费用计算
+- 7.锁定用户XBTC
+- 8.增加vault的to_be_redeemed_tokens标识
+- 9.赎回请求进行记录
+- 10.发出提现请求事件
 
 ##### 用户接口：
 ```rust
