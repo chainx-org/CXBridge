@@ -240,27 +240,27 @@ fn withdraw_collateral(orgin, amount: PCX) -> _ {
 | btc_amount | XBTC | 充值的XBTC数量 |
 | griefing_collateral | PCX | 防止恶意充值抵押 |
 
-##### 用户接口：
+##### 用户接口
 ```rust
 request_issue(requester, vault, amount, griefingCollateral)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：充值者信息
 - vault：选定的资产保险库
 - amount：充值XBTC数量
 - griefingCollateral:防止恶意充值抵押
 
-##### 事件：
+##### 事件
 - RequestIssue(requestid)
 
-##### 错误信息：
+##### 错误信息
 - InsecureVault
 选择的资产保险库抵押金额低于安全阈值
 - InsufficientGriefingCollateral
 充值抵押量小于规定金额
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保申请者是签名用户
 - 2.确认该功能模块是运行正常状态
 - 3.确保指定的资产保险库抵押率足够高
@@ -269,26 +269,26 @@ request_issue(requester, vault, amount, griefingCollateral)
 - 6.记录此次充值请求
 - 7.发出充值请求事件
 
-##### 用户接口：
+##### 用户接口
 ```rust
 execute_issue(requester, requestid, txid, merkleproof, rawtx)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：执行者信息
 - requestid：对应充值信息ID
 - txid：比特币交易ID
 - merkleproof：比特币交易默克尔证明
 - rawtx：比特币交易原文
 
-##### 事件：
+##### 事件
 - IssueRequestExecuted(requestid)
 
-##### 错误信息：
+##### 错误信息
 - IssueRequestExpired
 充值请求已经过期，这意味着不可以再执行该充值请求
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保申请者是签名用户
 - 2.确认该功能模块是运行正常状态
 - 3.根据requestid获取到充值请求的详细信息
@@ -299,23 +299,23 @@ execute_issue(requester, requestid, txid, merkleproof, rawtx)
 - 8.删除该充值请求
 - 9.发送充值成功事件
 
-##### 用户接口：
+##### 用户接口
 ```rust
 cancel_issue(requester, requestid)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：执行者信息
 - requestid：对应充值信息ID
 
-##### 事件：
+##### 事件
 - IssueRequestCancelled(requestid)
 
-##### 错误信息：
+##### 错误信息
 - IssueRequestNotExpired
 充值请求没有过期，这意味着不可以取消该充值请求
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保申请者是签名用户
 - 2.根据requestid获取到充值请求的详细信息
 - 3.确保该请求已经过期
@@ -346,21 +346,21 @@ cancel_issue(requester, requestid)
 | redeem_fee | PCX | 提现费用 |
 | reimburse | bool | 是否进行赔偿式赎回 |
 
-##### 用户接口：
+##### 用户接口
 ```rust
 request_redeem(requester, vault, amount, btcaddr)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：提现者信息
 - vault：选定的资产保险库
 - amount：提现XBTC数量
 - btcaddr： 提现者自己的比特币地址
 
-##### 事件：
+##### 事件
 - NewRedeemRequest(requestid)
 
-##### 错误信息：
+##### 错误信息
 - InsufficiantAssetsFunds
 提现XBTC数量大于自己拥有的数量
 - RedeemAmountTooLarge
@@ -368,7 +368,7 @@ request_redeem(requester, vault, amount, btcaddr)
 - AmountBelowDustAmount
 提现数量过小
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保是签名用户
 - 2.确认链是运行正常状态
 - 3.确保赎回金额小于自己拥有的XBTC数量
@@ -380,26 +380,26 @@ request_redeem(requester, vault, amount, btcaddr)
 - 9.赎回请求进行记录
 - 10.发出提现请求事件
 
-##### 用户接口：
+##### 用户接口
 ```rust
 execute_redeem(requester, requestid, txid, merkleproof, rawtx)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：执行者信息
 - requestid：对应提现信息ID
 - txid：比特币交易ID
 - merkleproof：比特币交易默克尔证明
 - rawtx：比特币交易原文
 
-##### 事件：
+##### 事件
 - RedeemExecuted(requestid)
 
-##### 错误信息：
+##### 错误信息
 - RedeemRequestExpired
 提现请求已经过期，这意味着不可以再执行该提现请求
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保是签名用户
 - 2.确认链是运行正常状态
 - 3.根据requestid获取到提现请求的详细信息
@@ -409,24 +409,24 @@ execute_redeem(requester, requestid, txid, merkleproof, rawtx)
 - 7.删除该提现请求
 - 8.发出执行提现事件
 
-##### 用户接口：
+##### 用户接口
 ```rust
 cancel_redeem(requester, requestid，reimburse)
 ```
 
-##### 参数信息：
+##### 参数信息
 - requester：执行者信息
 - requestid：对应提现信息ID
 - reimburse：是否进行报销式赎回
 
-##### 事件：
+##### 事件
 - RedeemCancelled(requestid)
 
-##### 错误信息：
+##### 错误信息
 - RedeemRequestNotExpired
 提现请求没有过期，这意味着不可以取消该提现请求
 
-##### 详细逻辑：
+##### 详细逻辑
 - 1.确保是签名用户
 - 2.根据requestid获取到提现请求的详细信息
 - 3.确保请求者是该提现请求者的拥有者
