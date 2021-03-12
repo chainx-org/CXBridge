@@ -324,6 +324,128 @@ cancel_issue(requester, requestid)
 - 6.发送取消充值事件
 
 ### 提现
+#### 概述
+提现模块允许用户在比特币链上接收BTC，以销毁chainx链上的等量XBTC。该过程由用户请求使用资金保险库提现而启动。然后，保管库需要在给定的时限内将BTC发送给用户。接下来，保险库必须通过向chainx提供证明他已经向用户发送了正确数量的BTC的方式来完成该过程。如果资金保险库未能在期限内提供有效证明，则用户可以从资金保险库的锁定抵押品中索取同等数量的PCX，以补偿他在BTC中的损失，也可以取消此次提现更换一个资产保险库再次执行提现。
+
+#### 整体流程
+1.前提条件：用户拥有XBTC
+2.用户执行request_redeem接口来锁定一定量的XBTC。在这个过程中，用户从资产保险库列表里面选择一个资产保险库来执行此次提现任务
+3.被选定的资产保险库监听由用户触发的NewRedeemRequest到事件，然后资产保险库在比特币链上对请求用户进行转账
+4.资产保险库或者其他人调用execute_redeem接口并提供比特币交易证明，如果上面接口执行成功，用户锁定的XBTC会被销毁，同时用户获得了他想要的比特币
+5.如果用户没有在规定时间内获得提现的比特币，用户可以调用cancel_redeem接口用以获取对应的PCX补偿或者取消此次提现换一个资产保险库重新提现
+
+#### 细节说明
+单次提现请求在链上储存的状态和信息
+| 参数 | 类型 | 描述 |
+| ------ | ------ | ------ |
+| vault | AccountId | 用户选定资产保险库信息 |
+| open_time | BlockNumber | 申请提现时间 |
+| requester | AccountId | 申请提现者 |
+| btc_address | BtcAddress | 申请提现者比特币地址 |
+| btc_amount | XBTC | 提现的XBTC数量 |
+| redeem_fee | PCX | 提现费用 |
+| reimburse | bool | 是否进行赔偿式赎回 |
+
+##### 用户接口：
+```rust
+request_redeem(requester, vault, amount, btcaddr)
+```
+
+##### 参数信息：
+requester：提现者信息
+vault：选定的资产保险库
+amount：提现XBTC数量
+btcaddr： 提现者自己的比特币地址
+
+##### 事件：
+NewRedeemRequest(requestid)
+
+##### 错误信息：
+InsufficiantAssetsFunds
+提现XBTC数量大于自己拥有的数量
+RedeemAmountTooLarge
+提现XBTC数量大于指定资产保险库可以提现的数量
+AmountBelowDustAmount
+提现数量过小
+
+##### 详细逻辑：
+	1.确保是签名用户
+	2.确认链是运行正常状态
+	3.确保赎回金额小于自己拥有的XBTC数量
+	4.确保赎回金额小于指定vault可以提现的数量
+	5.确保赎回金额足够大（防止粉尘攻击）
+	6.赎回费用计算
+	7.锁定用户XBTC
+	8.增加vault的to_be_redeemed_tokens标识
+	9.赎回请求进行记录
+	10.发出提现请求事件
+
+##### 用户接口：
+```rust
+execute_redeem(requester, requestid, txid, merkleproof, rawtx)
+```
+
+##### 参数信息：
+- requester：执行者信息
+- requestid：对应提现信息ID
+- txid：比特币交易ID
+- merkleproof：比特币交易默克尔证明
+- rawtx：比特币交易原文
+
+##### 事件：
+- RedeemExecuted(requestid)
+
+##### 错误信息：
+- RedeemRequestExpired
+提现请求已经过期，这意味着不可以再执行该提现请求
+
+##### 详细逻辑：
+- 1.确保是签名用户
+- 2.确认链是运行正常状态
+- 3.根据requestid获取到提现请求的详细信息
+- 4.确保该提现请求没有过期
+- 5.校验比特币交易信息
+- 6.销毁用户XBTC
+- 7.删除该提现请求
+- 8.发出执行提现事件
+
+##### 用户接口：
+```rust
+cancel_redeem(requester, requestid，reimburse)
+```
+
+##### 参数信息：
+- requester：执行者信息
+- requestid：对应提现信息ID
+- reimburse：是否进行报销式赎回
+
+##### 事件：
+- RedeemCancelled(request_id)
+
+##### 错误信息：
+- RedeemRequestNotExpired
+提现请求没有过期，这意味着不可以取消该提现请求
+
+##### 详细逻辑：
+- 1.确保是签名用户
+- 2.根据requestid获取到提现请求的详细信息
+- 3.确保请求者是该提现请求者的拥有者
+- 4.确保赎回请求已超出指定时间
+- 5.对vault惩罚计算
+- 6.如果 报销式赎回
+	  {
+	  	a.减少vault的to_be_redeemed_tokens标识和issued_tokens
+	  	b.销毁用户XBTC
+	  	c.将vault抵押的pcx给用户（根据btc-pcx换算比例）
+	  }
+	  否则
+	  {
+	  	a.将惩罚vault的钱给用户
+	  }
+- 7.禁用vault一段时间
+- 8.将赎回请求标记为删除
+- 9.删除该提现请求
+- 10.发出取消提现事件
 
 ### 费用
 #### 充值费用计算(目前充值不收取费用)：
