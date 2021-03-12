@@ -432,7 +432,8 @@ cancel_redeem(requester, requestid，reimburse)
 - 3.确保请求者是该提现请求者的拥有者
 - 4.确保赎回请求已超出指定时间
 - 5.对vault惩罚计算
-- 6.
+- 6.根据是否进行报销式赎回进行处理
+
 ```
  	  如果 报销式赎回
 	  {
