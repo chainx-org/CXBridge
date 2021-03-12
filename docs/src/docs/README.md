@@ -358,7 +358,7 @@ request_redeem(requester, vault, amount, btcaddr)
 - btcaddr： 提现者自己的比特币地址
 
 ##### 事件：
-NewRedeemRequest(requestid)
+- NewRedeemRequest(requestid)
 
 ##### 错误信息：
 - InsufficiantAssetsFunds
