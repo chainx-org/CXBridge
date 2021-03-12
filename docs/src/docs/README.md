@@ -432,8 +432,9 @@ cancel_redeem(requester, requestid，reimburse)
 - 3.确保请求者是该提现请求者的拥有者
 - 4.确保赎回请求已超出指定时间
 - 5.对vault惩罚计算
-- 6.如果 报销式赎回
-
+- 6.
+```
+ 	  如果 报销式赎回
 	  {
 	  
 	  	a.减少vault的to_be_redeemed_tokens标识和issued_tokens
@@ -451,6 +452,7 @@ cancel_redeem(requester, requestid，reimburse)
 	  	a.将惩罚vault的钱给用户
 		
 	  }
+```
 - 7.禁用vault一段时间
 - 8.将赎回请求标记为删除
 - 9.删除该提现请求
