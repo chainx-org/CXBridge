@@ -252,7 +252,7 @@ request_issue(requester, vault, amount, griefingCollateral)
 - griefingCollateral:防止恶意充值抵押
 
 ##### 事件：
-- RequestIssue(request_id)
+- RequestIssue(requestid)
 
 ##### 错误信息：
 - InsecureVault
@@ -420,7 +420,7 @@ cancel_redeem(requester, requestid，reimburse)
 - reimburse：是否进行报销式赎回
 
 ##### 事件：
-- RedeemCancelled(request_id)
+- RedeemCancelled(requestid)
 
 ##### 错误信息：
 - RedeemRequestNotExpired
