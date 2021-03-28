@@ -2,7 +2,7 @@
 
 ## 概述
 
-ChainX是基于Substrate架构，实现跨链交易的项目，而CXBridge则是ChainX中的核心模块之一。CXBridge用于实现BTC网络和ChainX的跨链交易，实现比特币网络和ChainX之间的资产价值转移。CXBridge本质上就是ChainX上的一种智能合约，被部署在ChainX的所有节点上，用于处理ChainX与BTC跨链交易的相关请求。CXBridge**通过分布式资产保险库的形式进行资产管理，并通过抵押的方式进行风险控制。**这有别于ChainX1.0中信托多签模式的去中心化托管方案。
+ChainX是基于Substrate架构，实现跨链交易的项目，而CXBridge则是ChainX中的核心模块之一。CXBridge用于实现BTC网络和ChainX的跨链交易，实现比特币网络和ChainX之间的资产价值转移。CXBridge本质上就是ChainX上的一种智能合约，被部署在ChainX的所有节点上，用于处理ChainX与BTC跨链交易的相关请求。CXBridge通过分布式资产保险库的形式进行资产管理，并通过抵押的方式进行风险控制。这有别于ChainX1.0中信托多签模式的去中心化托管方案。
 
 ![](https://github.com/Black-Block/CXbridge-Document/blob/main/picture/概念图.png)
 
